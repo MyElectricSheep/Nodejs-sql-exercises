@@ -1,12 +1,15 @@
 const express = require('express')
+require('dotenv').config()
 const bodyParser = require('body-parser')
+const db = require('./database')
 
 const app = express()
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded())
+app.use(bodyParser.urlencoded({extended: true}))
 
 app.get('/', (req, res) => {
-    console.log('Welcome to the Jungle')
+    db.query('SELECT * FROM users LIMIT 100')
+        .then(data => res.json(data.rows))
 })
 
 const port = process.env.PORT || 3000
