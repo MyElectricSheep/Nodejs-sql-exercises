@@ -10,6 +10,7 @@ const router = express.Router()
 // DELETE  /:id : To delete one user (with the id) - ✅
 
 // EXTRA: /:id/orders : To get all orders linked to a specific user - ✅
+// EXTRA: /:id/check-inactive : If a user has never ordered, he should be set as inactive - ✅
 
 router.get('/', (req, res) => {
     db.query('SELECT * FROM users LIMIT 100')
@@ -37,6 +38,43 @@ router.get('/:id/orders', (req, res) => {
     WHERE u.id = $1
     `, [id])
     .then(data => res.json(data.rows))
+    .catch(err => console.error(err))
+})
+
+router.get('/:id/orders', (req, res) => {
+    const { id } = req.params;
+    db.query(`
+    SELECT u.first_name, u.last_name, o.price, o.date
+    FROM users u
+    JOIN orders o
+    ON u.id = o.user_id
+    WHERE u.id = $1
+    `, [id])
+    .then(data => res.json(data.rows))
+    .catch(err => console.error(err))
+})
+
+router.put('/:id/check-inactive', (req, res) => {
+    const { id } = req.params;
+    db.query(`
+    SELECT u.first_name, u.last_name, COUNT(o.date) AS order_count
+    FROM users u
+    LEFT JOIN orders o
+    ON u.id = o.user_id
+    WHERE u.id = $1
+    GROUP BY u.first_name, u.last_name
+    `, [id])
+    .then(data => {
+        const [user] = data.rows
+        if (!user) res.status(404).send('No user matching that id')
+        if (parseInt(user.order_count, 10) < 1) {
+            return db.query(`UPDATE users SET active=false WHERE id=$1 RETURNING *`, [id])
+        }
+        else res.send('This user has already place some orders before')
+    })
+    .then(data => {
+        res.json(data.rows)
+    })
     .catch(err => console.error(err))
 })
 
