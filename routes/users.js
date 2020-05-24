@@ -9,6 +9,8 @@ const router = express.Router()
 // PUT /:id  :  To edit one user (with the id) - ✅
 // DELETE  /:id : To delete one user (with the id) - ✅
 
+// EXTRA: /:id/orders : To get all orders linked to a specific user - ✅
+
 router.get('/', (req, res) => {
     db.query('SELECT * FROM users LIMIT 100')
         .then(data => res.json(data.rows))
@@ -23,6 +25,19 @@ router.get('/:id', (req, res) => {
             res.status(200).json(data.rows)
         })
         .catch(err => console.error(err))
+})
+
+router.get('/:id/orders', (req, res) => {
+    const { id } = req.params;
+    db.query(`
+    SELECT u.first_name, u.last_name, o.price, o.date
+    FROM users u
+    JOIN orders o
+    ON u.id = o.user_id
+    WHERE u.id = $1
+    `, [id])
+    .then(data => res.json(data.rows))
+    .catch(err => console.error(err))
 })
 
 router.post('/', (req, res) => {
