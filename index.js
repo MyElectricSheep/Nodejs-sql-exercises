@@ -3,7 +3,6 @@ require('dotenv').config()
 const bodyParser = require('body-parser')
 // const { tokenChecker } = require('./middlewares/security')
 
-
 // Routes imports
 const users = require('./routes/users')
 const orders = require('./routes/orders')
