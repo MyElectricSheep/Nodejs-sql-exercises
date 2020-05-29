@@ -22,7 +22,7 @@ router.post('/:id/create-token', (req, res) => {
     checkUserExistence(userId)
         .then(user => {
             if (user.token_id) return res.status(403).send('User already has a token')
-            const token = uuidv4()
+            const token = uuidv4() // uuids look like this: 123e4567-e89b-12d3-a456-426614174000
             return db.query('INSERT INTO token(value) VALUES($1) RETURNING *', [token])
         })
         .then(data => {
