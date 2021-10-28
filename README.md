@@ -58,10 +58,12 @@ INSERT  INTO orders (price,date, user_id) VALUES ( 18, '2021-01-03 05:00:00', 2)
 INSERT  INTO orders (price,date, user_id) VALUES ( 18, '2021-01-04 06:00:00', 2);
 ```
 
-&nbsp;</li>
-<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Create an Express server with separate routes for:</span></li>
-<li><span style="font-weight: 400;">The users:</span>
+---
 
+</li>
+ 	<h4 style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Create an Express server with separate routes for:</span>
+ 	</h4>
+ 	<li><span style="font-weight: 400;">The users:</span>
 <ul>
  	<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">GET  /  : To get all the users </span></li>
  	<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">GET  /:id :  To get one user (with the id) </span></li>
