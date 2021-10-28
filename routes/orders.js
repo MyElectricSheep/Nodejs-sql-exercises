@@ -14,7 +14,7 @@ const { validationResult } = require("express-validator");
 router
   .route("/")
   .get((req, res) => {
-    db.query("SELECT * FROM orders")
+    db.query("SELECT * FROM orders ORDER BY id ASC")
       .then((data) => res.json(data.rows))
       .catch((err) => console.error(err));
   })

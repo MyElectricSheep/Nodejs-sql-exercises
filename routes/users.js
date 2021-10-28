@@ -15,7 +15,7 @@ const { validationResult } = require("express-validator");
 // EXTRA: /:id/check-inactive : If a user has never ordered, he should be set as inactive - ✅
 
 router.get("/", (req, res) => {
-  db.query("SELECT * FROM users LIMIT 100")
+  db.query("SELECT * FROM users ORDER BY id ASC LIMIT 100")
     .then((data) => res.json(data.rows))
     .catch((err) => console.error(err));
 });
