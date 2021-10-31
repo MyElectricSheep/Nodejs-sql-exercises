@@ -3,6 +3,7 @@ const db = require("../database");
 const router = express.Router();
 const userValidations = require("../validations/userValidations");
 const { validationResult } = require("express-validator");
+const getOneUser = require("../middlewares/getOneUser");
 
 // Create an Express server with routes for the users on:
 // GET  /  : To get all the users - ✅
@@ -20,15 +21,9 @@ router.get("/", (req, res) => {
     .catch((err) => console.error(err));
 });
 
-router.get("/:id", (req, res) => {
-  const { id } = req.params;
-  db.query("SELECT * FROM users WHERE id=$1", [id])
-    .then((data) => {
-      if (!data.rows.length)
-        return res.status(404).send("There is no user with that ID");
-      res.status(200).json(data.rows[0]);
-    })
-    .catch((err) => console.error(err));
+router.get("/:id", getOneUser, (req, res) => {
+  const { user } = req;
+  res.json(user);
 });
 
 router.get("/:id/orders", (req, res) => {
@@ -70,18 +65,22 @@ router.put("/:id/check-inactive", (req, res) => {
   )
     .then((data) => {
       const [user] = data.rows;
+      console.log(user);
       if (!user) return res.status(404).send("No user matches that id");
       if (parseInt(user.order_count, 10) < 1) {
         return db.query(
           `UPDATE users SET active=false WHERE id=$1 RETURNING *`,
           [id]
         );
-      } else
-        res.send(
-          "This user has already placed some orders before and is active"
-        );
+      }
     })
     .then((data) => {
+      if (!data)
+        // if you don't return anything from a promise (previous then block, implicit else case),
+        // you are effectively returning a resolved promise with the value undefined.
+        return res.send(
+          "This user has already placed some orders before and is active"
+        );
       res.json(data.rows[0]);
     })
     .catch((err) => console.error(err));

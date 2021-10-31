@@ -1,9 +1,12 @@
 require("dotenv").config();
 const express = require("express");
-const secure = require("./middlewares/secure");
+const errorHandler = require("./middlewares/errorHandler");
+// const secure = require("./middlewares/secure");
 
 const users = require("./routes/users");
 const orders = require("./routes/orders");
+const seed = require("./routes/seed");
+const auth = require("./routes/auth");
 
 const app = express();
 app.use(express.json());
@@ -16,6 +19,10 @@ app.use(express.json());
 
 app.use("/api/users", users);
 app.use("/api/orders", orders);
+app.use("/auth", auth);
+app.use("/seed", seed);
+
+app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
 

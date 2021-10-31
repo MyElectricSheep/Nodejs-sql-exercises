@@ -1,3 +1,9 @@
+const express = require("express");
+const db = require("../database");
+const router = express.Router();
+
+router.post("/", async (req, res) => {
+  const seedTables = `
         CREATE TABLE IF NOT EXISTS tokens (
             id  SERIAL PRIMARY KEY,
             value VARCHAR(255)
@@ -32,3 +38,25 @@
                 (18, '2021-01-01 00:00:00', 1),
                 (18, '2021-01-03 05:00:00', 2),
                 (18, '2021-01-04 06:00:00', 2);
+        `;
+  try {
+    const response = await db.query(seedTables);
+    res.json(response);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
+router.delete("/", async (req, res) => {
+  const dropTables = `
+    DROP TABLE IF EXISTS users, orders, tokens CASCADE;
+    `;
+  try {
+    const response = await db.query(dropTables);
+    res.json(response);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
+module.exports = router;
