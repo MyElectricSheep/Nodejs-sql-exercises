@@ -1,5 +1,7 @@
 # Node/SQL Exercise correction
 
+- ##### This is an exercise created for the [WBS Coding School](https://www.wbscodingschool.com/) to make web dev students practice their **Node + Express + SQL** skills.
+
 ### Documentation of the API ([Here](https://documenter.getpostman.com/view/14782056/TzecBQSt))
 
 <span style="font-weight: 400;">Brace up! We are going to create a small RESTful API using Node + Express + a PostgreSQL database that will serve the client with some data about users and their orders.</span>
